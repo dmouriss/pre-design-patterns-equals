@@ -3,26 +3,37 @@ namespace Pre.Equals.Example.Core;
 public class Game
 {
 
-    public List<Player> players { get; }
+    private readonly List<Player> _players;
 
-    private int currentPlayerIndex;
+    private int _currentPlayerIndex;
 
     public Player CurrentPlayer
     {
         get
         {
-            return players[currentPlayerIndex];
+            return _players[_currentPlayerIndex];
         }
     }
 
     public Game()
     {
-        players = new List<Player>();
+        _players = new List<Player>();
     }
 
     public void AddPlayer(string playerName)
     {
-        players.Add(new Player(playerName));
+        _players.Add(new Player(playerName));
+    }
+
+    public void AddJustPointsForCurrentPlayer()
+    {
+        foreach (Player player in _players)
+        {
+            if (player != CurrentPlayer && Equals(player.Location, CurrentPlayer.Location))
+            {
+                CurrentPlayer.AddPoint();
+            }
+        }
     }
 
     public bool DoTurn(int horizontal, int vertical, int[] diceResult)
@@ -30,8 +41,25 @@ public class Game
         if (Math.Abs(horizontal) > diceResult[0] || Math.Abs(vertical) > diceResult[1]) return false;
         
         CurrentPlayer.Move(horizontal, vertical);
-        currentPlayerIndex = (currentPlayerIndex + 1) * players.Count;
+        AddJustPointsForCurrentPlayer();
+        
+        Console.WriteLine($"{CurrentPlayer} staat op {CurrentPlayer.Location} en heeft {CurrentPlayer.Score} punten");
+        _currentPlayerIndex = (_currentPlayerIndex + 1) % _players.Count;
 
         return true;
+    }
+
+    public void AddFinalPoints()
+    {
+        Player? fartestTravelledPlayer = _players.MaxBy(player => player.Location);
+        fartestTravelledPlayer?.AddPoint(3);
+    }
+
+    public IEnumerable<Player> LeaderBoard
+    {
+        get
+        {
+            return _players.OrderBy(player => player.Score).ToList().AsReadOnly();
+        }
     }
 }

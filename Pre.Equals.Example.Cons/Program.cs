@@ -2,6 +2,8 @@
 
 using Pre.Equals.Example.Core;
 
+const int NumberOfRounds = 4;
+
 Game game = new Game();
 
 /*
@@ -18,13 +20,13 @@ while (!string.IsNullOrEmpty(playerName))
 }
 
 /*
- * PLAY GAME
+ * PLAY ROUNDS
 */
 
-while (true)
+for (int i = 0; i < NumberOfRounds; i++)
 {
     var diceResult = Dice.RollDice();
-    Console.WriteLine($"{game.CurrentPlayer} rolled a {diceResult[0]} and a {diceResult[1]}");
+    Console.WriteLine($"{game.CurrentPlayer} gooide een {diceResult[0]} en een {diceResult[1]}");
     bool validHorizontal;
     bool validVertical;
     int horizontal;
@@ -38,6 +40,12 @@ while (true)
     } while (!validHorizontal || !validVertical);
 
     bool validTurn = game.DoTurn(horizontal, vertical, diceResult);
-    if (validTurn) Console.WriteLine($"{game.CurrentPlayer} staat op {game.CurrentPlayer.Location}");
-    else Console.WriteLine("Ongeldig aantal stappen");
+    if (!validTurn) Console.WriteLine("Ongeldig aantal stappen");
+}
+
+game.AddFinalPoints();
+
+foreach (Player player in game.LeaderBoard)
+{
+    Console.WriteLine($"{player.Name}: {player.Score} punten");
 }

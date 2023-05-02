@@ -2,6 +2,7 @@ namespace Pre.Equals.Example.Core;
 
 public class Location
 {
+
     public int Row { get; private set; }
     public int Column { get; private set; }
     public Location()
@@ -22,6 +23,6 @@ public class Location
 
     public override string ToString()
     {
-        return $"{Row} = {Column}";
+        return $"{Row}, {Column}";
     }
 }

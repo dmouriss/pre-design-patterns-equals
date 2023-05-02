@@ -18,13 +18,13 @@ public class Player
         Location.MoveUp(vertical);
     }
 
-    public void AddPoint()
+    public void AddPoint(int amount = 1)
     {
-        Score += 1;
+        Score += amount;
     }
     
     public override string ToString()
     {
-        return Name;
+        return $"{Name}";
     }
 }
